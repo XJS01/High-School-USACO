@@ -1,0 +1,123 @@
+/*
+It was a dark and stormy night that ripped the roof and gates off the stalls that hold Farmer John's cows. Happily, many of the cows were on vacation, so the barn was not completely full.
+
+The cows spend the night in stalls that are arranged adjacent to each other in a long line. Some stalls have cows in them; some do not. All stalls are the same width.
+
+Farmer John must quickly erect new boards in front of the stalls, since the doors were lost. His new lumber supplier will supply him boards of any length he wishes, but the supplier can only deliver a small number of total boards. Farmer John wishes to minimize the total length of the boards he must purchase.
+
+Given M (1 <= M <= 50), the maximum number of boards that can be purchased; S (1 <= S <= 200), the total number of stalls; C (1 <= C <= S) the number of cows in the stalls, and the C occupied stall numbers (1 <= stall_number <= S), calculate the minimum number of stalls that must be blocked in order to block all the stalls that have cows in them.
+
+Print your answer as the total number of stalls blocked.
+
+PROGRAM NAME: barn1
+INPUT FORMAT
+Line 1:	M, S, and C (space separated)
+Lines 2-C+1:	Each line contains one integer, the number of an occupied stall.
+SAMPLE INPUT (file barn1.in)
+4 50 18
+3
+4
+6
+8
+14
+15
+16
+17
+21
+25
+26
+27
+30
+31
+40
+41
+42
+43
+OUTPUT FORMAT
+A single line with one integer that represents the total number of stalls blocked.
+SAMPLE OUTPUT (file barn1.out)
+25
+[One minimum arrangement is one board covering stalls 3-8, one covering 14-21, one covering 25-31, and one covering 40-43.] 
+*/
+
+/*
+ID: jasonxi1
+TASK: barn1
+LANG: C++
+*/
+
+#include <iostream>
+#include <fstream>
+#include <algorithm>
+#define MAX_S 201
+
+using namespace std;
+
+int M, S, C, numCovered;
+bool hasCow[MAX_S];
+bool isCovered[MAX_S];
+
+pair<int, int> findMaxCont()
+{
+	int maxLen = 0;
+	int maxLenI = 0;
+	for (int i = 1; i < S+1; i++)
+	{
+		if (!hasCow[i] && isCovered[i])
+		{
+			int lenCont = 0;
+			for (int j = i; j < S+1 && !hasCow[j]; j++)
+			{
+				lenCont += 1;
+			}
+			if (lenCont > maxLen)
+			{
+				maxLen = lenCont;
+				maxLenI = i;
+			}
+			i += lenCont;
+		}
+	}
+	return make_pair(maxLenI, maxLen);
+}
+
+int main()
+{
+	ifstream fin("barn1.in");
+	ofstream fout("barn1.out");
+	fin >> M >> S >> C;
+	numCovered = S;
+	fill_n(isCovered+1, S+1, true); //fills stalls 1 through s
+	for (int i = 0; i < C; i++)
+	{
+		int position;
+		fin >> position;
+		hasCow[position] = true;
+	}
+	int beginI = 1; 
+	while (!hasCow[beginI]) //remove the excess boards from the beginning
+	{
+		isCovered[beginI] = false;
+		numCovered -= 1;
+		beginI++;
+	}
+	int endI = S;
+	while (!hasCow[endI]) //remove the excess boards from the end
+	{
+		isCovered[endI] = false;
+		numCovered -= 1;
+		endI--;
+	}
+	cout << numCovered <<endl;
+	for (int i = 0; i < M - 1 && findMaxCont().second!=0; i++)
+	{
+		pair<int, int> holder = findMaxCont();
+		for (int j = 0; j < holder.second; j++)
+		{
+			isCovered[j + holder.first] = false;
+		}
+		numCovered -= holder.second;
+	}
+	fout << numCovered <<endl;
+	return 0;
+}

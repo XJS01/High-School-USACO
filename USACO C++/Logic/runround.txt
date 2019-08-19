@@ -1,0 +1,99 @@
+/*
+ID: jasonxi1
+TASK: runround
+LANG: C++
+*/
+#include <fstream>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string.h>
+#include <string>
+
+using namespace std;
+
+bool is_runround(string N, int start, bool visited[], int num_visited)
+{
+	if (num_visited == N.length() && start == 0)
+	{
+		return true;
+	}
+	if (visited[start])
+	{
+		return false;
+	}
+	else
+	{
+		visited[start] = true;
+		return is_runround(N, (start + N[start] - 48) % N.length(), visited, num_visited + 1);
+	}
+}
+int sum_digs(string N)
+{
+	int sum = 0;
+	for (int i = 0; i < N.length(); i++)
+	{
+		sum += N[i] - 48;
+	}
+	return sum;
+}
+
+bool has_zero(string N)
+{
+	for (int i = 0; i < N.length(); i++)
+	{
+		if (N[i] == '0')
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool is_uniq(string N)
+{
+	for (int i = 0; i < N.length()-1; i++)
+	{
+		for (int j = i+1; j < N.length(); j++)
+		{
+			if (N[i] == N[j])
+			{
+				return false;
+			}
+		}
+	}
+	return true;
+}
+int main()
+{
+	string M;
+	bool visited[10] = { false };
+	ifstream fin("runround.in");
+	ofstream fout("runround.out");
+	fin >> M;
+	bool found = false;
+	string curr_num = to_string(stoi(M) + 1);
+	while (!found)
+	{
+		if (is_uniq(curr_num) && sum_digs(curr_num) % curr_num.length() == 0 && !has_zero(curr_num))
+		{
+			if (is_runround(curr_num, 0, visited, 0))
+			{
+				found = true;
+			}
+			else
+			{
+				for (int i = 0; i < 10; i++)
+				{
+					visited[i] = false;
+				}
+			}
+		}
+		if (!found)
+		{
+			curr_num = to_string(stoi(curr_num) + 1);
+		}
+	}
+	fout << curr_num << endl;
+	return 0;
+}

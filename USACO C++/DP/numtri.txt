@@ -1,0 +1,55 @@
+/*
+ID: jasonxi1
+TASK: numtri
+LANG: C++
+*/
+
+#include <iostream>
+#include <fstream>
+#include <algorithm>
+#include <cstring>
+
+#define MAX_R 1000
+
+using namespace std;
+
+int triangle[MAX_R][MAX_R];
+int memo[MAX_R][MAX_R];
+
+int find_path(int row, int col, int R)
+{
+	if (row == R-1)
+	{
+		return triangle[row][col];
+	}
+	else
+	{
+		if (memo[row][col] != -1)
+		{
+			return memo[row][col];
+		}
+		int val = triangle[row][col];
+		memo[row][col] = max(val+ find_path(row + 1, col + 1, R), val + find_path(row + 1, col, R));
+		return memo[row][col];
+	}
+}
+
+int main()
+{
+
+	ifstream fin("numtri.in");
+	ofstream fout("numtri.out");
+	int R;
+	fin >> R;
+	memset(memo, -1, sizeof(memo));
+	for (int i = 0; i < R; i++)
+	{
+		for (int j = 0; j <= i; j++)
+		{
+			fin >> triangle[i][j];
+		}
+	}
+	int max = find_path(0, 0, R);
+	fout << max << endl;
+	return 0;
+}

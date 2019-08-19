@@ -1,0 +1,36 @@
+import bisect
+"""
+ID: jasonxi1
+LANG: PYTHON3
+TASK: Angry Cows (2016 Jan Silver 1)
+"""
+fin = open ('angry.in', 'r')
+fout = open ('angry.out', 'w')
+NK=list(map(int, fin.readline().strip('\n').split()))
+numCows=NK[1]
+numBales=NK[0]
+bales=[]
+for i in range(numBales):
+    bales.append(int(fin.readline().strip('\n')))
+bales.sort()
+def all_destroyed(r, bales, numCows):
+    needCows=0
+    index=0
+    while(index<=len(bales)-1):
+        start=bales[index]
+        index=bisect.bisect_left(bales, start+2*r+1)
+        needCows+=1
+        if needCows>numCows:
+            return False
+    return True
+def check(low, high, bales, numCows):
+        if(low==high):
+            return low
+        mid=(high+low)//2
+        if(all_destroyed(mid, bales, numCows)):
+            high=mid
+        else:
+            low=mid+1
+        return check(low, high, bales, numCows)
+fout.write(str(check(0, bales[len(bales)-1]-bales[0]//(2*numCows)+1, bales, numCows)))
+

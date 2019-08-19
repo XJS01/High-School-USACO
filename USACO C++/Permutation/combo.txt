@@ -1,0 +1,148 @@
+/*
+Farmer John's cows keep escaping from his farm and causing mischief. To try and prevent them from leaving, he purchases a fancy combination lock to keep his cows from opening the pasture gate.
+
+Knowing that his cows are quite clever, Farmer John wants to make sure they cannot easily open the lock by simply trying many different combinations. The lock has three dials, each numbered 1..N (1 <= N <= 100), where 1 and N are adjacent since the dials are circular. There are two combinations that open the lock, one set by Farmer John, and also a "master" combination set by the lock maker.
+
+The lock has a small tolerance for error, however, so it will open even if the numbers on the dials are each within at most 2 positions of a valid combination.
+
+For example, if Farmer John's combination is (1,2,3) and the master combination is (4,5,6), the lock will open if its dials are set to (1,3,5) (since this is close enough to Farmer John's combination) or to (2,4,8) (since this is close enough to the master combination). Note that (1,5,6) would not open the lock, since it is not close enough to any one single combination.
+
+Given Farmer John's combination and the master combination, please determine the number of distinct settings for the dials that will open the lock. Order matters, so the setting (1,2,3) is distinct from (3,2,1).
+
+PROGRAM NAME: combo
+INPUT FORMAT:
+Line 1:	The integer N.
+Line 2:	Three space-separated integers, specifying Farmer John's combination.
+Line 3:	Three space-separated integers, specifying the master combination (possibly the same as Farmer John's combination).
+SAMPLE INPUT (file combo.in):
+50
+1 2 3
+5 6 7
+INPUT DETAILS:
+Each dial is numbered 1..50. Farmer John's combination is (1,2,3), and the master combination is (5,6,7).
+
+OUTPUT FORMAT:
+Line 1:	The number of distinct dial settings that will open the lock.
+SAMPLE OUTPUT (file combo.out):
+249
+*/
+
+/*
+ID: jasonxi1
+TASK: combo
+LANG: C++
+*/
+
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <set>
+#include <string>
+#include <cmath>
+using namespace std;
+
+int N;
+vector<string> farmerC;
+vector<string> masterC;
+set<string> permutations1;
+int ans = 0;
+
+vector<string> permute(vector<string> combo)
+{
+	if (combo.size() == 1)
+	{
+		set<string> distinctPerm;
+		vector<string> permutations;
+		for (int i = -2; i < 3; i++)
+		{
+			string possibleCombo = to_string(stoi(combo[0]) + i);
+			if (stoi(possibleCombo) <= 0)
+			{
+				possibleCombo = to_string(N + stoi(possibleCombo));
+			}
+			else if (stoi(possibleCombo) > N)
+			{
+				possibleCombo = to_string(stoi(possibleCombo)-N);
+			}
+			if (distinctPerm.find(possibleCombo) == distinctPerm.end())
+			{
+				permutations.push_back(possibleCombo);
+				distinctPerm.insert(possibleCombo);
+			}
+		}
+		return permutations;
+	}
+	else
+	{
+		set<string> distinctPerm;
+		vector<string> permutations;
+		vector<string> remList(combo.begin() + 1, combo.end());
+		vector<string> remPermute = permute(remList);
+		for (int i = -2; i < 3; i++)
+		{
+			for (int j = 0; j < remPermute.size(); j++)
+			{
+				string possibleCombo;
+				if (stoi(combo[0]) + i <= 0) //if the combo number goes below 0
+				{
+					possibleCombo = to_string(N+(stoi(combo[0]) + i)) + remPermute[j];
+				}
+				else if (stoi(combo[0]) + i > N) //if the combo number goes above N
+				{
+					possibleCombo = to_string((stoi(combo[0]) +i) - N) + remPermute[j];
+				}
+				else
+				{
+					possibleCombo = to_string(stoi(combo[0]) + i) + remPermute[j];
+				}
+				if (distinctPerm.find(possibleCombo) == distinctPerm.end())
+				{
+					permutations.push_back(possibleCombo);
+					distinctPerm.insert(possibleCombo);
+				}
+			}
+		}
+		return permutations;
+	}
+}
+int main()
+{
+	ifstream fin("combo.in");
+	ofstream fout("combo.out");
+	fin >> N;
+	if (N <= 2+1) //check if all possible combos will work
+	{
+		fout << pow(N, 3) << endl;
+		return 0;
+	}
+	for (int i = 0; i < 3; i++)
+	{
+		string num;
+		fin >> num;
+		farmerC.push_back(num);
+	}
+	for (int i = 0; i < 3; i++)
+	{
+		string num;
+		fin >> num;
+		masterC.push_back(num);
+	}
+	vector<string> farmerCombos = permute(farmerC);
+	vector<string> masterCombos = permute(masterC);
+	set<string> distinctCombos;
+	for (int i = 0; i < farmerCombos.size(); i++)
+	{
+		if (distinctCombos.find(farmerCombos[i]) == distinctCombos.end())
+		{
+			distinctCombos.insert(farmerCombos[i]);
+			ans++;
+		}
+		if (distinctCombos.find(masterCombos[i]) == distinctCombos.end())
+		{
+			distinctCombos.insert(masterCombos[i]);
+			ans++;
+		}
+	}
+	fout << ans <<endl;
+	return 0;
+}

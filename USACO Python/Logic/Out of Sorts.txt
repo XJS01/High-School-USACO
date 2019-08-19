@@ -1,0 +1,17 @@
+"""
+ID: jxiong78
+LANG: PYTHON3
+TASK: Out of Sorts (2018 US Open Silver 1)
+"""
+fin = open ('sort.in', 'r')
+fout = open ('sort.out', 'w')
+numEl=int(fin.readline().strip('/n'))
+maxShift=0
+A=[]
+for i in range(numEl):
+    A.append((int(fin.readline().strip('/n')), i))
+A.sort()
+for i in range(len(A)):
+    if A[i][1]-i>maxShift:
+        maxShift=A[i][1]-i
+fout.write(str(maxShift+1))

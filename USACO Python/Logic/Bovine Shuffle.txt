@@ -1,0 +1,18 @@
+"""
+ID: jxiong78
+LANG: PYTHON3
+TASK: Bovine Shuffle (2017 Dec Bronze 2)
+"""
+fin = open ('shuffle.in', 'r')
+fout = open ('shuffle.out', 'w')
+numCows=int(fin.readline().strip('\n'))
+locations=list(map(int, fin.readline().strip('\n').split()))
+cows=list(map(int, fin.readline().strip('\n').split()))
+for i in range(3):
+    origCows=cows.copy()
+    for j in range(numCows):
+        cows[j]=origCows[locations[j]-1]
+for i in range(numCows):
+    fout.write(str(cows[i])+'\n')
+fin.close()
+fout.close()

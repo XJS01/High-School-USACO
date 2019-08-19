@@ -1,0 +1,73 @@
+#include <iostream>
+#include <fstream>
+#include <algorithm>
+#include <math.h>
+const int MAX_N = 200;
+
+using namespace std;
+ifstream fin("moocast.in");
+ofstream fout("moocast.out");
+
+int n;
+bool graph[MAX_N][MAX_N];
+int xyp[MAX_N][3];
+bool emptyVisited[MAX_N] = { false };
+int maxCows = 0;
+bool in_range(int a[], int b[])
+{
+	if (pow(pow(a[0] - b[0], 2) + pow(a[1] - b[1], 2), 0.5) < a[2])
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+int dfs(int start, bool visited[])
+{
+	int numVisited = 1;
+        visited[start] = true;
+	for (int i = 0; i < n; i++)
+	{
+		if (graph[start][i] == true and visited[i]==false)
+		{
+			visited[i] = true;
+			numVisited+=dfs(i, visited);
+		}
+	}
+	return numVisited;
+}
+int main()
+{
+	fin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			fin >> xyp[i][j];
+		}
+	}
+	for (int i=0; i < n; i++)
+	{
+		for (int j=0; j < n; j++)
+		{
+			if (in_range(xyp[i], xyp[j]))
+			{
+				graph[i][j] = true;
+			}
+		}
+	}
+	for (int i = 0; i < n; i++)
+	{
+		bool visited[MAX_N]= {false};
+		int reach = dfs(i, visited);
+		if (reach > maxCows)
+		{
+			maxCows = reach;
+		}
+	}
+	fout << maxCows << endl;
+    return 0; 
+}

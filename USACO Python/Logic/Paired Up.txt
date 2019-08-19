@@ -1,0 +1,32 @@
+"""
+ID: jxiong78
+LANG: PYTHON3
+TASK: Paired Up (2017 US Open Silver 1)
+"""
+fin = open ('pairup.in', 'r')
+fout = open ('pairup.out', 'w')
+num=int(fin.readline().strip('\n'))
+cowOuts=[]
+for i in range(num):
+    line=list(map(int, fin.readline().strip('\n').split()))
+    cowOuts.append([line[1], line[0]])
+numCows=0
+for out in cowOuts:
+    numCows+=out[1]
+maxTime=-1
+cowOuts.sort()
+while(len(cowOuts)!=0):
+    t=cowOuts[0][0]+cowOuts[len(cowOuts)-1][0]
+    if cowOuts[0][1]<=cowOuts[len(cowOuts)-1][1]:
+        cowOuts[len(cowOuts)-1][1]-=cowOuts[0][1]
+        cowOuts[0][1]=0
+    else:
+        cowOuts[0][1]-=cowOuts[len(cowOuts)-1][1]
+        cowOuts[len(cowOuts)-1][1]=0
+    if cowOuts[len(cowOuts)-1][1]==0:
+        cowOuts.pop(len(cowOuts)-1)
+    if len(cowOuts)!=0 and cowOuts[0][1]==0:
+        cowOuts.pop(0)
+    if t>maxTime:
+        maxTime=t
+fout.write(str(maxTime))

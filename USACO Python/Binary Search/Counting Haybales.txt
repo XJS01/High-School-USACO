@@ -1,0 +1,32 @@
+"""
+ID: jxiong78
+LANG: PYTHON3
+TASK: Counting Haybales (2016 Dec Silver 1)
+"""
+fin = open ('haybales.in', 'r')
+fout = open ('haybales.out', 'w')
+NQ=list(map(int, fin.readline().strip('\n').split()))
+N=list(map(int, fin.readline().strip('\n').split()))
+N.sort()
+intervalHay=[]
+def binarySearch(l,num):
+    if(l[0]>num):
+        return 0
+    Min=0
+    Max=len(l)-1
+    while(Min!=Max):
+        mid=(Min+Max+1)//2
+        if l[mid]<=num:
+            Min=mid
+        else:
+            Max=mid-1
+    return Max+1
+for i in range(NQ[1]):
+    interval=list(map(int, fin.readline().strip('\n').split()))
+    aIndex=binarySearch(N, interval[0]-1)
+    bIndex=binarySearch(N, interval[1])
+    intervalHay.append(bIndex-aIndex)
+for num in intervalHay:
+    fout.write(str(num)+'\n')
+fout.close()
+fin.close()

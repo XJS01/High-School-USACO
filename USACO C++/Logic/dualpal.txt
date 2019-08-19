@@ -1,0 +1,99 @@
+/*
+A number that reads the same from right to left as when read from left to right is called a palindrome. The number 12321 is a palindrome; the number 77778 is not. Of course, palindromes have neither leading nor trailing zeroes, so 0220 is not a palindrome.
+
+The number 21 (base 10) is not palindrome in base 10, but the number 21 (base 10) is, in fact, a palindrome in base 2 (10101).
+
+Write a program that reads two numbers (expressed in base 10):
+
+N (1 <= N <= 15)
+S (0 < S < 10000)
+and then finds and prints (in base 10) the first N numbers strictly greater than S that are palindromic when written in two or more number bases (2 <= base <= 10).
+Solutions to this problem do not require manipulating integers larger than the standard 32 bits.
+
+PROGRAM NAME: dualpal
+INPUT FORMAT
+A single line with space separated integers N and S.
+
+SAMPLE INPUT (file dualpal.in)
+3 25
+OUTPUT FORMAT
+N lines, each with a base 10 number that is palindromic when expressed in at least two of the bases 2..10. The numbers should be listed in order from smallest to largest.
+SAMPLE OUTPUT (file dualpal.out)
+26
+27
+28
+*/
+
+/*
+ID: jasonxi1
+TASK: dualpal
+LANG: C++
+*/
+
+#include <iostream>
+#include <fstream>
+#include <cmath>
+#include <string>
+
+using namespace std;
+ifstream fin("dualpal.in");
+ofstream fout("dualpal.out");
+
+string changeBase(int a, int b)
+{
+	string num;
+	while (a != 0)
+	{
+		if ((a%b) > 9)
+		{
+			num = string(1, char(a%b + 55)) + num;
+		}
+		else
+		{
+			num = to_string(a%b) + num;
+		}
+		a = a / b;
+	}
+	return num;
+
+}
+
+bool isPal(string a)
+{
+	for (int i = 0; i < a.length() / 2 + 1; i++)
+	{
+		if (a[a.length() - 1 - i] != a[i])
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+int main()
+{
+
+	int numReq, smallest;
+	fin >> numReq >> smallest;
+	int count = 0;
+	int i = smallest + 1;
+	while (count < numReq)
+	{
+		int numPal = 0;
+		for (int j = 2; j < 11; j++)
+		{
+			if (isPal(changeBase(i, j)))
+			{
+				numPal += 1;
+				if (numPal==2)
+				{
+					fout << i << endl;
+					count += 1;
+					break;
+				}
+			}
+		}
+		i++;
+	}
+	return 0;
+}

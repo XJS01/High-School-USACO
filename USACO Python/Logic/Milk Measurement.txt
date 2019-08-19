@@ -1,0 +1,41 @@
+"""
+ID: jxiong78
+LANG: PYTHON3
+TASK: Milk Measurement (2017 Dec Bronze 3)
+"""
+fin = open ('measurement.in', 'r')
+fout = open ('measurement.out', 'w')
+numChanges=int(fin.readline().strip('\n'))
+cowOut={'Bessie':7, 'Elsie': 7, 'Mildred':7}
+days=[]
+changes=[]
+oldDisplay=[]
+newDisplay=['Bessie', 'Elsie', 'Mildred']
+dispChanges=0
+for i in range(numChanges):
+    changes.append(fin.readline().strip('\n').split())
+print(changes)
+for i in range(numChanges):
+    days.append(changes[i][0])
+days=list(map(int, days))
+days.sort()
+days=list(map(str, days))
+print(days)
+for i in range(numChanges):
+    oldDisplay=newDisplay.copy()
+    newDisplay=[]
+    maxOut=0
+    for j in range(numChanges):
+        if days[i]==changes[j][0]:
+            cowOut[changes[j][1]]=cowOut[changes[j][1]]+int(changes[j][2])
+    for j in range(3):
+        if cowOut[list(cowOut.keys())[j]]>maxOut:
+            maxOut=cowOut[list(cowOut.keys())[j]]
+    for j in range(3):
+        if cowOut[list(cowOut.keys())[j]]==maxOut:
+            newDisplay.append(list(cowOut.keys())[j])
+    if newDisplay!=oldDisplay:
+        dispChanges+=1
+fout.write(str(dispChanges)+'\n')
+fout.close()
+fin.close()

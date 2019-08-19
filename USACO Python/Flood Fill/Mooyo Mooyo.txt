@@ -1,0 +1,54 @@
+"""
+ID: jxiong78
+LANG: PYTHON3
+TASK: Mooyo Mooyo (2018 Dec Silver 3)
+"""
+fin = open ('mooyomooyo.in', 'r')
+fout = open ('mooyomooyo.out', 'w')
+NK=list(map(int, fin.readline().strip('\n').split()))
+grid=[]
+for i in range(NK[0]):
+    grid.append(list(map(int, list(fin.readline().strip('\n')))))
+def dfs(row, column, g, color=None, visit=None):
+    if visit is None:
+        visit = []
+        color=g[row][column]
+    if column>9 or row>len(g)-1 or column<0 or row<0 or g[row][column]!=color or [row, column] in visit:
+        pass
+    else:
+        visit.append([row,column])
+        dfs(row, column+1, g, color, visit)
+        dfs(row, column-1, g, color, visit)
+        dfs(row-1, column, g, color, visit)
+        dfs(row+1, column, g, color, visit)
+    return visit
+def drop(g):
+    for c in range(10):
+        column=[]
+        for r in range(len(g)):
+            column.append(g[r][c])
+        for i in range(len(column)):
+            if column[i]==0:
+                column.insert(0, column.pop(i))
+        for row in range(len(g)):
+            g[row][c]=column[row]
+def delG(g):
+    progress=False
+    checked=[]
+    for row in range(len(g)):
+        for column in range(len(g[row])):
+            if g[row][column]!=0 and [row, column] not in checked:
+                visited=dfs(row, column, g)
+                print(visited)
+                if len(visited)>=NK[1]:
+                    for coord in visited:
+                        g[coord[0]][coord[1]]=0
+                    progress=True
+                else:
+                    checked.extend(visited)
+
+    return progress
+while(delG(grid)):
+    drop(grid)
+for i in range(len(grid)):
+    fout.write(''.join(list(map(str, grid[i])))+'\n')

@@ -1,0 +1,26 @@
+"""
+ID: jasonxi1
+LANG: PYTHON3
+TASK: Cities and States (2016 Dec Silver 2)
+"""
+fin = open ('citystate.in', 'r')
+fout = open ('citystate.out', 'w')
+numLoc=int(fin.readline().strip('\n'))
+locations=[]
+for i in range(numLoc):
+    locations.append(fin.readline().strip('\n').split())
+print(locations)
+numPairs=0
+codes={}
+for i in range(numLoc):
+    code=locations[i][0][0:2]+locations[i][1]
+    if code not in codes and locations[i][0][0:2]!=locations[i][1]:
+        codes[code]=1
+    elif locations[i][0][0:2]!=locations[i][1]:
+        codes[code]+=1 
+for i in range(numLoc):
+    revCode=locations[i][1]+locations[i][0][0:2]
+    if revCode in codes:
+        numPairs+=codes[revCode]
+fout.write(str(int(numPairs/2))+ '\n')
+fin.close()

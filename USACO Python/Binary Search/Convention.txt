@@ -1,0 +1,31 @@
+"""
+ID: jxiong78
+LANG: PYTHON3
+TASK: Convention (2018 Dec Silver 1)
+"""
+fin = open ('convention.in', 'r')
+fout = open ('convention.out', 'w')
+NMC=list(map(int, fin.readline().strip('/n').split()))
+cowTimes=list(map(int, fin.readline().strip('/n').split()))
+cowTimes.sort()
+def bin_search(low, high, cowT):
+    mid=(low+high)//2
+    if(low==high):
+        return low
+    elif can_fit(mid, cowT):
+        high=mid
+    elif not can_fit(mid,cowT):
+        low=mid+1
+    return bin_search(low, high, cowT)
+    
+def can_fit(maxT, cowT, M=NMC[1], C=NMC[2]):
+    buses=1
+    t=cowT[0]
+    startI=0
+    for i in range(len(cowT)):
+        if(cowT[i]-t>maxT or i-startI>=C):
+            buses+=1
+            startI=i
+            t=cowT[i]
+    return(buses<=M)                  
+fout.write(str(bin_search(0, 10**9, cowTimes))+'\n')  

@@ -1,0 +1,20 @@
+"""
+ID: jxiong78
+LANG: PYTHON3
+TASK: Cow Signal (2016 Dec Bronze 3)
+"""
+fin = open ('cowsignal.in', 'r')
+fout = open ('cowsignal.out', 'w')
+MNK=list(map(int, fin.readline().strip('\n').split()))
+smallSig=[]
+bigSig=[]
+for i in range(MNK[0]):
+    smallSig.append(fin.readline().strip('\n'))
+for i in range(MNK[0]):
+    for j in range(MNK[2]):
+        bigLine=''
+        for k in range(MNK[1]):
+            bigLine+=MNK[2]*smallSig[i][k]
+        fout.write(bigLine+'\n')           
+fin.close()
+fout.close()

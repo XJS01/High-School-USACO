@@ -1,0 +1,26 @@
+import bisect
+"""
+ID: jxiong78
+LANG: PYTHON3
+TASK: Why Did the Cow Cross the Road? (2017 Feb Silver 1)
+"""
+fin = open ('helpcross.in', 'r')
+fout = open ('helpcross.out', 'w')
+chickCow=list(map(int, fin.readline().strip('\n').split()))
+chickenTimes=[]
+cowTimes=[]
+numPairs=0
+for i in range(chickCow[0]):
+    chickenTimes.append(int(fin.readline().strip('\n')))
+for i in range(chickCow[1]):
+    cowTimes.append(tuple(map(int, fin.readline().strip('\n').split())))
+chickenTimes.sort()
+cowTimes.sort(key=lambda x: x[1])
+for i in range(len(cowTimes)):
+    chickI=bisect.bisect_left(chickenTimes, cowTimes[i][0])
+    if chickI != len(chickenTimes) and chickenTimes[chickI]<=cowTimes[i][1]:
+        chickenTimes.pop(chickI)
+        numPairs+=1
+fout.write(str(numPairs)+'\n')
+
+

@@ -1,0 +1,36 @@
+"""
+ID: jxiong78
+LANG: PYTHON3
+TASK: Moocast (2016 Dec Silver 3)
+"""
+def in_range(a, b):
+    if ((a[0]-b[0])**2+(a[1]-b[1])**2)**(0.5)<=a[2]:
+        return True
+    else:
+        return False
+def dfs(start, visit, l, canTrans):
+    for i in range(len(canTrans[start])):
+        if canTrans[start][i] not in visit:
+            visit.append(canTrans[start][i].copy())
+            dfs(l.index(canTrans[start][i]), visit, l, canTrans)
+fin = open ('moocast.in', 'r')
+fout = open ('moocast.out', 'w')
+numCows=int(fin.readline().strip('\n'))
+xyp=[]
+Max=0   
+for i in range(numCows):
+    xyp.append(list(map(int, fin.readline().strip('\n').split())))
+canTransmit=[]
+for i in range(numCows):
+    currTransmit=[]
+    for j in range(numCows):
+        if in_range(xyp[i], xyp[j]):
+            currTransmit.append(xyp[j].copy())
+    canTransmit.append(currTransmit.copy())
+for i in range(numCows):
+    visited=[]
+    dfs(i, visited, xyp, canTransmit)
+    if len(visited)>Max:
+        Max=len(visited)
+        Max=len(visited)
+fout.write(str(Max)+'\n')
